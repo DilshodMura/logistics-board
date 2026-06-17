@@ -1,0 +1,55 @@
+# Секреты и переменные окружения (КРИТИЧЕСКИ ВАЖНО)
+.env
+.env.production
+.env.development
+.env.local
+.env.*.local
+*.env
+
+# Зависимости и пакетные менеджеры
+node_modules/
+/pnpm-store/
+
+# Результаты сборки (Vite / Скрипты)
+dist/
+dist-ssr/
+*.out
+build/
+
+# Логи и отчеты
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Диагностика и кэш инструментов
+.eslintcache
+.stylelintcache
+.prettiercache
+.parcel-cache
+.turbo/
+.nuxt/
+.next/
+
+# Настройки редакторов (VS Code, WebStorm)
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.bak
+
+# Системные файлы (Mac / Windows)
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
