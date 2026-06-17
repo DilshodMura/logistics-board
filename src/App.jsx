@@ -362,8 +362,8 @@ export default function App() {
                     .eq('id', id);
 
                   if (error) {
-                    console.error("❌ Ошибка изменения статуса в базе:", error.message, error.details);
-                    alert(`Не удалось убрать водителя из базы: ${error.message}`);
+                    console.error("❌ Error occured:", error.message, error.details);
+                    alert(`Can not delete driver from database: ${error.message}`);
                     fetchOrders(); // возвращаем актуальные данные
                   }
                 }

@@ -132,7 +132,7 @@ export default function OrderTable({ groupName, orders, userRole, onUpdateCell, 
           </span>
         </div>
         <button onClick={() => setCollapsed(!collapsed)} className="text-xs font-medium text-[#0071e3] hover:underline bg-transparent">
-          {collapsed ? '▲ Свернуть группу' : '▼ Развернуть группу'}
+          {collapsed ? '▼ Expand group' : '▲ Collapse group'}
         </button>
       </div>
 
@@ -146,7 +146,7 @@ export default function OrderTable({ groupName, orders, userRole, onUpdateCell, 
                 <th className="p-3 w-[110px]">TRAILER #</th>
                 <th className="p-3 w-[140px]">PHONE #</th>
                 <th className="p-3 w-[140px]">STATUS</th>
-                <th className="p-3 w-[130px]">ETA (hh:mm DAY)</th>
+                <th className="p-3 w-[130px]">ETA</th>
                 <th className="p-3 w-[160px]">ORIGIN / DELIVERY</th>
                 <th className="p-3 min-w-[150px]">NOTES</th>
                 <th className="p-3 w-[110px] text-right pr-6">WEEKLY GROSS</th>
@@ -250,7 +250,7 @@ export default function OrderTable({ groupName, orders, userRole, onUpdateCell, 
                         type="text" 
                         defaultValue={order.eta || ''} 
                         onBlur={(e) => onUpdateCell(order.id, 'eta', e.target.value)} 
-                        placeholder="Напр: 10:00 TUE"
+                        placeholder="DEL 10:00 TUE"
                         className="w-full bg-transparent px-2 py-1 text-xs rounded focus:bg-white border border-transparent focus:border-[#d2d2d7] outline-none text-slate-800 font-medium"
                       />
                     </td>

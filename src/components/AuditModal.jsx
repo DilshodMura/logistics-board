@@ -15,12 +15,12 @@ export default function AuditModal({ onClose }) {
   // Функция для красивого вывода деталей
   const showLogDetails = (log) => {
     alert(
-      `Пользователь: ${log.changed_by_email}\n` +
-      `Водитель: ${log.driver_name}\n` +
-      `Поле: ${log.column_name}\n` +
-      `Было: ${log.old_value || 'пусто'}\n` +
-      `Стало: ${log.new_value || 'пусто'}\n` +
-      `Время: ${new Date(log.changed_at).toLocaleString()}`
+      `User: ${log.changed_by_email}\n` +
+      `Driver: ${log.driver_name}\n` +
+      `Column: ${log.column_name}\n` +
+      `Before: ${log.old_value || 'пусто'}\n` +
+      `After: ${log.new_value || 'пусто'}\n` +
+      `Time: ${new Date(log.changed_at).toLocaleString()}`
     );
   };
 
@@ -28,7 +28,7 @@ export default function AuditModal({ onClose }) {
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[80vh] flex flex-col p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
         <div className="flex justify-between items-center mb-4 border-b pb-3">
-          <h3 className="text-lg font-bold text-slate-800">📜 Журнал аудита изменений</h3>
+          <h3 className="text-lg font-bold text-slate-800">📜 History </h3>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600 font-bold text-lg transition-colors">✕</button>
         </div>
         
@@ -36,13 +36,13 @@ export default function AuditModal({ onClose }) {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-slate-50 text-slate-500 border-b font-medium uppercase tracking-wider text-[10px]">
-                <th className="p-2.5 pl-4">Время</th>
-                <th className="p-2.5">Кто изменил</th>
-                <th className="p-2.5">Водитель</th>
-                <th className="p-2.5">Ячейка</th>
-                <th className="p-2.5">Было</th>
-                <th className="p-2.5">Стало</th>
-                <th className="p-2.5 text-center pr-4">Действие</th> {/* Новая колонка */}
+                <th className="p-2.5 pl-4">Time</th>
+                <th className="p-2.5">User changed</th>
+                <th className="p-2.5">Driver</th>
+                <th className="p-2.5">Cell</th>
+                <th className="p-2.5">Before</th>
+                <th className="p-2.5">After</th>
+                <th className="p-2.5 text-center pr-4">Action</th> {/* Новая колонка */}
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -73,7 +73,7 @@ export default function AuditModal({ onClose }) {
                       onClick={() => showLogDetails(log)}
                       className="px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded text-[10px] font-medium transition-colors"
                     >
-                      🔍 Обзор
+                      🔍 View
                     </button>
                   </td>
                 </tr>
@@ -82,7 +82,7 @@ export default function AuditModal({ onClose }) {
           </table>
           
           {logs.length === 0 && (
-            <p className="text-center text-slate-400 italic py-8">История изменений пуста.</p>
+            <p className="text-center text-slate-400 italic py-8">History is empty.</p>
           )}
         </div>
       </div>

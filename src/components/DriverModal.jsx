@@ -10,9 +10,22 @@ export default function DriverModal({ orders, onClose }) {
   const existingGroups = Array.from(new Set(orders.map(o => o.dispatcher_group).filter(Boolean)));
 
   const handlePhoneChange = (e) => {
-    const cleaned = e.target.value.replace(/[^0-9\s+\-()]/g, '');
-    setPhone(cleaned);
-  };
+  const input = e.target.value.replace(/\D/g, ''); // Удаляем всё, кроме цифр
+  const cleanInput = input.substring(0, 10); // Отрезаем максимум 10 цифр
+  
+  let formatted = '';
+  if (cleanInput.length > 0) {
+    if (cleanInput.length <= 3) {
+      formatted = cleanInput;
+    } else if (cleanInput.length <= 6) {
+      formatted = `${cleanInput.slice(0, 3)}-${cleanInput.slice(3)}`;
+    } else {
+      formatted = `${cleanInput.slice(0, 3)}-${cleanInput.slice(3, 6)}-${cleanInput.slice(6)}`;
+    }
+  }
+
+  setPhone(formatted);
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,7 +62,7 @@ export default function DriverModal({ orders, onClose }) {
         
         <form onSubmit={handleSubmit} className="space-y-4 text-sm">
           <div>
-            <label className="text-xs font-medium text-[#86868b] block mb-1">Dispatcher Group</label>
+            <label className="text-xs font-medium text-[#86868b] block mb-1">Dispatch Group</label>
             <select value={group} onChange={e => setGroup(e.target.value)} className="w-full p-2.5 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl text-[#1d1d1f] outline-none focus:border-[#0071e3] focus:bg-white transition-all cursor-pointer" required>
               <option value="">Select group...</option>
               {existingGroups.map(g => <option key={g} value={g}>{g}</option>)}
@@ -68,7 +81,14 @@ export default function DriverModal({ orders, onClose }) {
             </div>
             <div>
               <label className="text-xs font-medium text-[#86868b] block mb-1">Phone #</label>
-              <input type="text" placeholder="Numbers only" value={phone} onChange={handlePhoneChange} className="w-full p-2.5 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl text-[#1d1d1f] outline-none focus:border-[#0071e3] focus:bg-white transition-all placeholder-[#86868b]" />
+              <input 
+                type="text" 
+                placeholder="949-473-1514" 
+                value={phone} 
+                onChange={handlePhoneChange} 
+                maxLength={12}
+                className="w-full p-2.5 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl text-[#1d1d1f] outline-none focus:border-[#0071e3] focus:bg-white transition-all placeholder-[#86868b]" 
+              />
             </div>
           </div>
           
