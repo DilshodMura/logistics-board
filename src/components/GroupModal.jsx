@@ -1,28 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../supabaseClient';
 
 export default function GroupModal({ onClose, onGroupCreated }) {
   const [groupName, setGroupName] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const modalRef = useRef(null);
+
+  // Закрытие модального окна по клавише Escape
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
+  // Закрытие по клику на бэкдроп (мимо самого окна)
+  const handleBackdropClick = (e) => {
+    if (modalRef.current && !modalRef.current.contains(e.target)) {
+      onClose();
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const name = groupName.trim().toUpperCase();
-    if (!name) return;
+    if (!name || isLoading) return;
 
-    const { error } = await supabase.from('orders').insert([{
-      dispatcher_group: name,
-      driver_name: '-- NEW GROUP PENDING --',
-      status: 'READY'
-    }]);
+    setIsLoading(true);
 
-    if (error) alert(error.message);
-    else onGroupCreated(name);
+    try {
+      const { error } = await supabase.from('orders').insert([
+        {
+          dispatcher_group: name,
+          driver_name: '-- NEW GROUP PENDING --',
+          status: 'READY'
+        }
+      ]);
+
+      if (error) {
+        alert(`Error: ${error.message}`);
+      } else {
+        onGroupCreated(name);
+        onClose(); // Закрываем модалку после успешного создания
+      }
+    } catch (err) {
+      alert('Something went wrong. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/15 backdrop-blur-[2px] z-50 flex items-center justify-center p-4">
+    <div 
+      onClick={handleBackdropClick}
+      className="fixed inset-0 bg-black/15 backdrop-blur-[2px] z-50 flex items-center justify-center p-4"
+    >
       {/* Контейнер в светлом стиле Apple */}
-      <div className="bg-white rounded-2xl max-w-[440px] w-full p-6 shadow-[0_20px_50px_rgba(0,0,0,0.08)] border border-[#e8e8ed] font-sans text-left">
+      <div 
+        ref={modalRef}
+        className="bg-white rounded-2xl max-w-[440px] w-full p-6 shadow-[0_20px_50px_rgba(0,0,0,0.08)] border border-[#e8e8ed] font-sans text-left transition-all"
+      >
         
         {/* Заголовок с минималистичной иконкой */}
         <div className="flex items-center gap-2.5 mb-5">
@@ -48,7 +86,8 @@ export default function GroupModal({ onClose, onGroupCreated }) {
               placeholder="E.G. ALEX" 
               value={groupName} 
               onChange={e => setGroupName(e.target.value)} 
-              className="w-full bg-[#f5f5f7] placeholder-[#86868b] text-[#1d1d1f] text-[13px] font-medium px-3 py-2.5 rounded-xl border border-transparent focus:border-[#d2d2d7] focus:bg-white outline-none transition-all uppercase" 
+              disabled={isLoading}
+              className="w-full bg-[#f5f5f7] placeholder-[#86868b] text-[#1d1d1f] text-[13px] font-medium px-3 py-2.5 rounded-xl border border-transparent focus:border-[#d2d2d7] focus:bg-white outline-none transition-all uppercase disabled:opacity-60 disabled:cursor-not-allowed" 
               required 
             />
           </div>
@@ -58,15 +97,21 @@ export default function GroupModal({ onClose, onGroupCreated }) {
             <button 
               type="button" 
               onClick={onClose} 
-              className="px-4 py-2 text-[13px] font-medium text-[#1d1d1f] bg-[#f5f5f7] hover:bg-[#e8e8ed] rounded-xl border border-transparent active:scale-[0.98] transition-all"
+              disabled={isLoading}
+              className="px-4 py-2 text-[13px] font-medium text-[#1d1d1f] bg-[#f5f5f7] hover:bg-[#e8e8ed] rounded-xl border border-transparent active:scale-[0.98] transition-all disabled:opacity-50 disabled:pointer-events-none"
             >
               Abort
             </button>
             <button 
               type="submit" 
-              className="px-4 py-2 text-[13px] font-medium text-white bg-[#0071e3] hover:bg-[#0077ed] rounded-xl shadow-sm shadow-blue-500/10 active:scale-[0.98] transition-all"
+              disabled={isLoading || !groupName.trim()}
+              className="px-4 py-2 text-[13px] font-medium text-white bg-[#0071e3] hover:bg-[#0077ed] rounded-xl shadow-sm shadow-blue-500/10 active:scale-[0.98] transition-all disabled:bg-[#0071e3]/50 disabled:pointer-events-none flex items-center justify-center min-w-[100px]"
             >
-              Mount Cell
+              {isLoading ? (
+                <span className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white" />
+              ) : (
+                'Mount Cell'
+              )}
             </button>
           </div>
         </form>
